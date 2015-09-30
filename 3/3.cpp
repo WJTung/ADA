@@ -19,6 +19,8 @@ bool cal_result(long long i, long long j)
 	residue *= (c * (i - j));
 	residue *= bigmod((i + j), e, p);
 	residue %= p;
+	if(residue < 0)
+		residue += p;
 	if(residue > (p / 2))
 		return 1;
 	else
