@@ -1,6 +1,6 @@
 // This is b03902062 WJ's code, discussed with JoJorge (b03902061)
 #include <stdio.h>
-#include <algorithm>
+#include <stdlib.h>
 const int N_max = 2E5;
 long long c, e, p, table[2 * N_max];
 long long bigmod(long long base, long long power, long long mod)
@@ -18,8 +18,12 @@ long long bigmod(long long base, long long power, long long mod)
 void build_table(long long n)
 {
 	long long i, max_sum = 2 * n - 1;
-	for(i = 1; i <= max_sum; i++)
+	for(i = 1; i <= max_sum; i+=2)
 		table[i] = bigmod(i, e, p);
+	table[2] = bigmod(2, e, p);
+	long long two = table[2];
+	for(i = 4; i < max_sum; i+=2)
+		table[i] = table[i/2] * two; 
 }	
 bool cal_result(long long i, long long j)
 {
@@ -30,10 +34,17 @@ bool cal_result(long long i, long long j)
 		residue += p;
 	residue *= table[i + j];
 	residue %= p;
-	if(residue * 2 > p)
+	if(residue > (p / 2))
 		return 1;
 	else
 		return 0;
+}
+int compare(const void *a, const void *b)
+{
+	if(cal_result((*(long long*)a), (*(long long*)b)))
+		return -1;
+	else
+		return 1;
 }
 int main()
 {
@@ -46,7 +57,7 @@ int main()
 		build_table(n);
 		for(j = 0; j < n; j++)
 			ans[j] = j + 1;
-		std::sort(ans, ans + n, cal_result);
+		qsort(ans, n, sizeof(long long), compare);
 		for(j = 0; j < n; j++)
 			printf("%lld ", ans[j]);
 		putchar('\n');
