@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 const int N_max = 2E5;
-long long c, e, p, table[2 * N_max];
+long long c, e, p, table[2 * N_max] = {0};
 long long bigmod(long long base, long long power, long long mod)
 {
 	if(power == 0)
@@ -17,14 +17,25 @@ long long bigmod(long long base, long long power, long long mod)
 }
 void build_table(long long n)
 {
-	long long i, max_sum = 2 * n - 1;
-	for(i = 1; i <= max_sum; i+=2)
-		table[i] = bigmod(i, e, p);
-	table[2] = bigmod(2, e, p);
-	long long two = table[2];
-	for(i = 4; i < max_sum; i+=2)
-		table[i] = (table[i/2] * two) % p; 
-}	
+	long long i, j, max_sum = 2 * n - 1;
+	for(i = 2; i * i <= max_sum; i++)
+	{
+		if(table[i] == 0)
+		{
+			table[i] = bigmod(i, e, p);
+			for(j = i * 2; j <= max_sum; j+=i)
+			{
+				if(table[j] == 0)
+					table[j] = table[i];
+				else
+				{
+					table[j] *= table[i];
+					table[j] %= p;
+				}
+			}
+		}
+	}
+}
 bool cal_result(long long i, long long j)
 {
 	long long residue = 1;
