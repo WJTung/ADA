@@ -8,10 +8,12 @@ long long bigmod(long long base, long long power, long long mod)
 	if(power == 0)
 		return 1;
 	long long tmp = bigmod(base, power/2, mod);
+	tmp *= tmp;
+	tmp %= mod;
 	if(power % 2 == 0)
-		return ((tmp * tmp) % mod);
+		return tmp;
 	else
-		return ((base * tmp * tmp) % mod);
+		return ((base * tmp) % mod);
 }
 void build_table(long long n)
 {
