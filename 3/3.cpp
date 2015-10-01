@@ -1,50 +1,65 @@
 // This is b03902062 WJ's code, discussed with JoJorge (b03902061)
 #include <stdio.h>
-#include <stdlib.h>
 const int N_max = 2E5 + 1;
-long long c, e, p;
-long long bigmod(long long base, long long power, long long mod)
+long long bigmod(long long b, long long p, long long m)
 {
-	if(power == 0)
+	if(p == 0)
 		return 1;
-	long long tmp = bigmod(base, power/2, mod);
-	if(power % 2 == 0)
-		return ((tmp * tmp) % mod);
+	long long tmp = bigmod(b, p/2, m);
+	if(p % 2 == 0)
+		return ((tmp * tmp) % m);
 	else
-		return ((base * tmp * tmp) % mod);
+		return ((b * tmp * tmp) % m);
 }
-bool cal_result(long long i, long long j)
+bool cal_result(long long i, long long j, long long c, long long e, long long p)
 {
 	long long residue = 1;
 	residue *= (c * (i - j));
-	residue *= bigmod((i + j), e, p);
 	residue %= p;
 	if(residue < 0)
 		residue += p;
+	residue *= bigmod((i + j), e, p);
+	residue %= p;
 	if(residue > (p / 2))
 		return 1;
 	else
 		return 0;
 }
-int compare(const void *a, const void *b)
+void swap(long long *a, long long *b)
 {
-	if(cal_result((*(long long*)a), (*(long long*)b)))
-		return -1;
-	else
-		return 1;
+	long long tmp = (*a);
+	(*a) = (*b);
+	(*b) = tmp;
+}
+void quicksort(long long *ans, long long left, long long right, long long c, long long e, long long p)
+{
+	if(left >= right)
+		return;
+	long long pivot = ans[left], i, j = left;
+	for(i = left + 1; i <= right; i++)
+	{
+		if(cal_result(ans[i], pivot, c, e, p) == 1)
+		{
+			j++;
+			swap(ans + i, ans + j);
+		}
+	}
+	swap(ans + left, ans + j);
+	quicksort(ans, left, j - 1, c, e, p);
+	quicksort(ans, j + 1, right, c, e, p);
 }
 int main()
 {
-	long long t, n, i, j, ans[N_max];
+	long long t, n, c, e, p, i, j, ans[N_max];
 	scanf("%lld", &t);
 	for(i = 1; i <= t; i++)
 	{
 		scanf("%lld%lld%lld%lld", &n, &c, &e, &p);
-		e %= (p - 1); // Fermat's little theorem a ^ (p - 1) = 1 (mod p)
-		for(j = 0; j < n; j++)
-			ans[j] = j + 1;
-		qsort(ans, n, sizeof(long long), compare);
-		for(j = 0; j < n; j++)
+		// e %= (p - 1); // Fermat's little theorem a ^ (p - 1) = 1 (mod p)
+		for(j = 1; j <= n; j++)
+			ans[j] = j;
+		quicksort(ans, 1, n, c, e, p);
+		for(j = 1; j <= n; j++)
 			printf("%lld ", ans[j]);
 		putchar('\n');
 	}
