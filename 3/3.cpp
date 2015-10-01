@@ -23,7 +23,7 @@ void build_table(long long n)
 	table[2] = bigmod(2, e, p);
 	long long two = table[2];
 	for(i = 4; i < max_sum; i+=2)
-		table[i] = table[i/2] * two; 
+		table[i] = (table[i/2] * two) % p; 
 }	
 bool cal_result(long long i, long long j)
 {
