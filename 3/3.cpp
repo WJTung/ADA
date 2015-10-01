@@ -1,6 +1,6 @@
 // This is b03902062 WJ's code, discussed with JoJorge (b03902061)
 #include <stdio.h>
-#include <stdlib.h>
+#include <algorithm>
 const int N_max = 2E5;
 long long c, e, p, table[2 * N_max];
 long long bigmod(long long base, long long power, long long mod)
@@ -28,17 +28,10 @@ bool cal_result(long long i, long long j)
 		residue += p;
 	residue *= table[i + j];
 	residue %= p;
-	if(residue > (p / 2))
+	if(residue * 2 > p)
 		return 1;
 	else
 		return 0;
-}
-int compare(const void *a, const void *b)
-{
-	if(cal_result((*(long long*)a), (*(long long*)b)))
-		return -1;
-	else
-		return 1;
 }
 int main()
 {
@@ -51,7 +44,7 @@ int main()
 		build_table(n);
 		for(j = 0; j < n; j++)
 			ans[j] = j + 1;
-		qsort(ans, n, sizeof(long long), compare);
+		std::sort(ans, ans + n, cal_result);
 		for(j = 0; j < n; j++)
 			printf("%lld ", ans[j]);
 		putchar('\n');
