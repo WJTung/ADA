@@ -1,8 +1,8 @@
 // This is b03902062 WJ's code, discussed with JoJorge (b03902061)
 #include <stdio.h>
-#include <algorithm>
-const int N_Max = 2E5;
-long long c, e, p, prime_factor[2 * N_Max] = {0}, table[2 * N_Max] = {0};
+#include <stdlib.h>
+const int N_max = 2E5;
+long long c, e, p, table[2 * N_max] = {0};
 long long bigmod(long long base, long long power, long long mod)
 {
 	if(power == 0)
@@ -15,30 +15,24 @@ long long bigmod(long long base, long long power, long long mod)
 	else
 		return ((base * tmp) % mod);
 }
-void build_prime_factor()
-{
-	long long i, j, Max_Sum = 2 * N_Max - 1;
-	for(i = 2; (i * i) <= Max_Sum; i++)
-	{
-		if(prime_factor[i] == 0)
-		{
-			for(j = (i * i); j <= Max_Sum; j+=i)
-				prime_factor[j] = i;
-		}
-	}
-}
-void build_table(long long n)
+void build_table(long long n) // build a table to access (i + j) ^ e fast
 {
 	long long i, j, max_sum = 2 * n - 1;
+	for(i = 1; i <= max_sum; i++)
+		table[i] = 0;
 	for(i = 2; i <= max_sum; i++)
 	{
-		if(prime_factor[i] == 0)
+		if(table[i] == 0)
+		{
 			table[i] = bigmod(i, e, p);
+			for(j = (i * i); j <= max_sum; j+=i)
+					table[j] = i;
+		}
 		else
 		{
 			long long factor_1, factor_2;
-			factor_1 = prime_factor[i];
-			factor_2 = i / prime_factor[i];
+			factor_1 = table[i];
+			factor_2 = i / table[i];
 			table[i] = (table[factor_1] * table[factor_2]) % p;
 		}
 	}
@@ -57,11 +51,17 @@ bool cal_result(long long i, long long j)
 	else
 		return 0;
 }
+int compare(const void *a, const void *b)
+{
+	if(cal_result((*(long long*)a), (*(long long*)b)))
+		return -1;
+	else
+		return 1;
+}
 int main()
 {
-	long long t, n, i, j, ans[N_Max];
+	long long t, n, i, j, ans[N_max];
 	scanf("%lld", &t);
-	build_prime_factor();
 	for(i = 1; i <= t; i++)
 	{
 		scanf("%lld%lld%lld%lld", &n, &c, &e, &p);
@@ -69,7 +69,7 @@ int main()
 		build_table(n);
 		for(j = 0; j < n; j++)
 			ans[j] = j + 1;
-		std::sort(ans, ans + n, cal_result);
+		qsort(ans, n, sizeof(long long), compare);
 		for(j = 0; j < n; j++)
 			printf("%lld ", ans[j]);
 		putchar('\n');
