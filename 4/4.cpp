@@ -1,9 +1,11 @@
+// This is b03902062 WJ's code
 #include <stdio.h>
 const int max_length = 18 + 1;
 const int max_remainder_size = 7;
 long long table[max_length][max_remainder_size][max_length][max_length] = {{{{0}}}}; //  length remainder number_of_7 number_of_4
-//storing number less than digits 
+// storing number <= length digit 
 long long sum_table[max_length][max_remainder_size][max_length][max_length] = {{{{0}}}}; // length need_remainder now_7 now_4
+// storing num of lucky number with given length (length digit to fill), need remainder, now_7, now_4
 int remainder_table[max_length] = {0};
 void build_remainder_table(void)
 {
@@ -89,6 +91,7 @@ long long find_lucky(int now_4, int now_7, int now_remainder, int length, int *b
 	}
 	int new_remainder = now_remainder + bound[length] * remainder_table[length];
     new_remainder %= 7;
+    // pick the same number as bound[length]
     if(bound[length] == 4)
 		return find_lucky(now_4 + 1, now_7, new_remainder, length - 1, bound, ans);
     else if(bound[length] == 7)
@@ -101,7 +104,7 @@ int main()
     int i, j, digit, ld[max_length], rd[max_length], t;
     build_remainder_table();
     build_table();
-	build_sum_table();
+    build_sum_table();
     scanf("%d", &t);
     for(i = 0; i < t; i++)
     {
