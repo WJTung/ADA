@@ -1,6 +1,5 @@
 // This is b03902062 WJ's code
 #include <stdio.h>
-#include <string.h>
 const int max_n = 2000;
 const int max_length = 2000;
 int max_digit;
