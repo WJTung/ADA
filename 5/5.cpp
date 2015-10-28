@@ -1,8 +1,8 @@
 // This is b03902062 WJ's code
 #include <stdio.h>
 #include <string.h>
-const int max_n = 5000;
-const int max_sum = 5000;
+const int max_n = 2000;
+const int max_length = 2000;
 int max_digit;
 void build_num(int *num, int sum, int sum_need)
 {
@@ -50,13 +50,12 @@ int main()
 {
 	int T, i;
 	scanf("%d", &T);
-    int num[max_sum];
 	for(i = 1; i <= T; i++)
 	{
 		int n, j, c[max_n];
 		scanf("%d", &n);
+        int num[max_length] = {0};
 		max_digit = 0;
-        memset(num, 0, sizeof(num));
 		scanf("%d", &c[0]);
 		build_num(num, 0, c[0]);
 		for(j = 1; j < n; j++)
