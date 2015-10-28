@@ -44,7 +44,6 @@ void build_num(int *num, int sum, int sum_need)
 	}
 	for(length = max_digit; length >= 1; length--)
 		putchar(num[length] + '0');
-	putchar(' ');
     return;
 }
 int main()
@@ -62,6 +61,7 @@ int main()
 		build_num(num, 0, c[0]);
 		for(j = 1; j < n; j++)
 		{
+            putchar(' ');
 			scanf("%d", &c[j]);
 			build_num(num, c[j - 1], c[j]);
 		}
