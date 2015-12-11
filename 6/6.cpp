@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 const int m_max = 100000;
-const int n_max = 100001 + 1;
+const int n_max = 50000 + 1;
 typedef struct edge
 {
 	int node1;
@@ -46,14 +46,14 @@ void DFS(int root, std::vector<int> *adjacent, int *parent, long long *now_num, 
 	}
 	return;
 }			
-int find_root(int n, int *parent)
+int find_component(int n, int *component)
 {
-	if(parent[n] == n)
+	if(component[n] == n) // the symbol of the component is itself
 		return n;
 	else 
 	{
-		int root = find_root(parent[n], parent);
-		parent[n] = root;
+		int root = find_component(component[n], component);
+		component[n] = root;
 		return root;
 	}
 }
@@ -64,12 +64,16 @@ int main()
 	for(i = 0; i < T; i++)
 	{
 		int n, m, j;
-		int parent[n_max]; // disjoint set to see if two nodes are in same component, smallest one is root
-		long long must_num = 0, must_sum = 0;
+		int component[n_max]; // disjoint set to see if two nodes are in same component
+		int component_size[n_max];
+        long long must_num = 0, must_sum = 0;
 		E edges[m_max];
 		scanf("%d%d", &n, &m);
 		for(j = 1; j <= n; j++)
-			parent[j] = j;
+        {
+			component[j] = j;
+            component_size[j] = 1;
+        }
 		for(j = 0; j < m; j++)
 			scanf("%d%d%d", &edges[j].node1, &edges[j].node2, &edges[j].weight);
 		std::sort(edges, edges + m, cmp);
@@ -81,11 +85,11 @@ int main()
             std::vector<int> adjacent[n_max];
 			while(edges[now_position].weight == now_weight)
 			{
-				int root1 = find_root(edges[now_position].node1, parent), root2 = find_root(edges[now_position].node2, parent); // each set is a component
-                if(root1 != root2)
+				int component1 = find_component(edges[now_position].node1, component), component2 = find_component(edges[now_position].node2, component);
+                if(component1 != component2) 
 				{
-					adjacent[root1].push_back(root2);
-					adjacent[root2].push_back(root1);
+					adjacent[component1].push_back(component2);
+					adjacent[component2].push_back(component1);
 				}
 				now_position++;
 			}
@@ -94,18 +98,24 @@ int main()
 			int low[n_max] = {0}, visit[n_max] = {0}, DFS_t, k;
 			for(k = now_start; k < now_position; k++)
 			{
-				int root1 = find_root(edges[k].node1, parent), root2 = find_root(edges[k].node2, parent);
-				if(!visit[root1])
+				int component1 = find_component(edges[k].node1, component), component2 = find_component(edges[k].node2, component);
+				if(!visit[component1]) // Each component is seem as a node in DFS, this node is still not visited
                 {
                     DFS_t = 0;
-			        DFS(root1, adjacent, DFS_parent, &now_num, low, visit, &DFS_t);
+			        DFS(component1, adjacent, DFS_parent, &now_num, low, visit, &DFS_t);
                 }
-                if(root1 != root2) // union
+                if(component1 != component2) // union
 				{
-					if(root1 < root2)
-						parent[root2] = root1;
+					if(component_size[component1] < component_size[component2])
+					{	
+                        component[component1] = component2;
+                        component_size[component2] += component_size[component1];
+                    }
 					else
-						parent[root1] = root2;
+					{	
+                        component[component2] = component1;
+                        component_size[component1] += component_size[component2];
+                    }
 				}
 			}
 			must_num += now_num;
