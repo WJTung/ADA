@@ -16,7 +16,7 @@ bool cmp(const E &edge1, const E &edge2)
 {
 	return edge1.weight < edge2.weight;
 }
-void DFS(int root, std::vector<int> *adjacent, int *parent, int *now_num, int *low, int *visit, int *t)
+void DFS(int root, std::vector<int> *adjacent, int *parent, long long *now_num, int *low, int *visit, int *t)
 {
 	(*t)++;
 	visit[root] = (*t);
@@ -65,7 +65,7 @@ int main()
 	{
 		int n, m, j;
 		int parent[n_max]; // disjoint set to see if two nodes are in same component, smallest one is root
-		int must_num = 0, must_sum = 0;
+		long long must_num = 0, must_sum = 0;
 		E edges[m_max];
 		scanf("%d%d", &n, &m);
 		for(j = 1; j <= n; j++)
@@ -76,7 +76,7 @@ int main()
 		int now_position = 0;
 		while(now_position < m)
 		{
-			int now_weight = edges[now_position].weight;
+			long long now_weight = edges[now_position].weight;
 			int now_start = now_position;
             std::vector<int> adjacent[n_max];
 			while(edges[now_position].weight == now_weight)
@@ -102,7 +102,7 @@ int main()
 				}
 			}
 			int DFS_root = edges[now_start].node1;
-			int now_num = 0; // must edge num of now weight
+			long long now_num = 0; // must edge num of now weight
 			int DFS_parent[n_max] = {0};
 			DFS_parent[DFS_root] = DFS_root;
 			int low[n_max] = {0}, visit[n_max] = {0}, DFS_t = 0;
@@ -110,7 +110,7 @@ int main()
 			must_num += now_num;
 			must_sum += now_weight * now_num;
         }
-		printf("%d %d\n", must_num, must_sum);
+		printf("%lld %lld\n", must_num, must_sum);
 	}
 }
 			
