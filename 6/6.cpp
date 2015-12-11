@@ -89,11 +89,18 @@ int main()
 				}
 				now_position++;
 			}
-			int k;
+			long long now_num = 0; // must edge num of now weight
+			int DFS_parent[n_max] = {0};
+			int low[n_max] = {0}, visit[n_max] = {0}, DFS_t, k;
 			for(k = now_start; k < now_position; k++)
 			{
 				int root1 = find_root(edges[k].node1, parent), root2 = find_root(edges[k].node2, parent);
-				if(root1 != root2) // union
+				if(!visit[root1])
+                {
+                    DFS_t = 0;
+			        DFS(root1, adjacent, DFS_parent, &now_num, low, visit, &DFS_t);
+                }
+                if(root1 != root2) // union
 				{
 					if(root1 < root2)
 						parent[root2] = root1;
@@ -101,12 +108,6 @@ int main()
 						parent[root1] = root2;
 				}
 			}
-			int DFS_root = edges[now_start].node1;
-			long long now_num = 0; // must edge num of now weight
-			int DFS_parent[n_max] = {0};
-			DFS_parent[DFS_root] = DFS_root;
-			int low[n_max] = {0}, visit[n_max] = {0}, DFS_t = 0;
-			DFS(DFS_root, adjacent, DFS_parent, &now_num, low, visit, &DFS_t);
 			must_num += now_num;
 			must_sum += now_weight * now_num;
         }
