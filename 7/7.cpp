@@ -1,8 +1,8 @@
 /* This is b03902062 WJ's code 7.cpp */
 #include <stdio.h>
 #include <algorithm>
-const int n_max = 100;
-const int m_max = 100;
+const int n_max = 10000;
+const int m_max = 100000;
 typedef struct vertex
 {
 	int num;
