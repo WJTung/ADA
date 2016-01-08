@@ -1,8 +1,8 @@
 /* This is b03902062 WJ's code 7.cpp */
 #include <stdio.h>
 #include <vector>
-const int n_max = 100; //10000;
-const int m_max = 100; //100000;
+const int n_max = 10000;
+const int m_max = 100000;
 int visited1[n_max];
 int visited2[n_max];
 int is_start[n_max];
