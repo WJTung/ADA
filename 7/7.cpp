@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <vector>
 const int n_max = 10000;
-const int m_max = 100000;
+const int m_max = 10000;
 int visited1[n_max];
 int visited2[n_max];
 int is_start[n_max];
@@ -24,10 +24,26 @@ int find_new(std::vector<int> *, int);
 int visit2(int, std::vector<int> *, int);
 int check_ans(void)
 {
-	// puts("check ans");
-	int i, ans[n_max];
+	int i, j, ans[n], adjacent_matrix[n][n];
+	for(i = 0; i < n; i++)
+		for(j = 0; j < n; j++)
+			adjacent_matrix[i][j] = 0;
 	for(i = 0; i < n; i++)
 		ans[visit_order_2[i]] = visit_order_1[i];
+	for(i = 0; i < m; i++)
+	{
+		adjacent_matrix[edges1[i].vertex1][edges1[i].vertex2]++;
+		adjacent_matrix[edges1[i].vertex2][edges1[i].vertex1]++;
+	}
+	for(i = 0; i < m; i++)
+	{
+		adjacent_matrix[ans[edges2[i].vertex1]][ans[edges2[i].vertex2]]--;
+		adjacent_matrix[ans[edges2[i].vertex2]][ans[edges2[i].vertex1]]--;
+		if(adjacent_matrix[ans[edges2[i].vertex1]][ans[edges2[i].vertex2]] < 0)
+			return 0;
+		if(adjacent_matrix[ans[edges2[i].vertex2]][ans[edges2[i].vertex1]] < 0)
+			return 0;
+	}
 	for(i = 0; i < n; i++)
 		printf("%d ", ans[i] + 1);
 	putchar('\n');
