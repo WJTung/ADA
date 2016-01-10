@@ -21,16 +21,16 @@ int check_ans(void)
 			adjacent_matrix[i][j] = 0;
 	for(i = 0; i < m; i++)
 	{
-		adjacent_matrix[edges1[i].vertex1][edges1[i].vertex2]++;
-		adjacent_matrix[edges1[i].vertex2][edges1[i].vertex1]++;
+		adjacent_matrix[edges2[i].vertex1][edges2[i].vertex2]++;
+		adjacent_matrix[edges2[i].vertex2][edges2[i].vertex1]++;
 	}
 	for(i = 0; i < m; i++)
 	{
-		adjacent_matrix[ans[edges2[i].vertex1]][ans[edges2[i].vertex2]]--;
-		adjacent_matrix[ans[edges2[i].vertex2]][ans[edges2[i].vertex1]]--;
-		if(adjacent_matrix[ans[edges2[i].vertex1]][ans[edges2[i].vertex2]] < 0)
+		adjacent_matrix[ans[edges1[i].vertex1]][ans[edges1[i].vertex2]]--;
+		adjacent_matrix[ans[edges1[i].vertex2]][ans[edges1[i].vertex1]]--;
+		if(adjacent_matrix[ans[edges1[i].vertex1]][ans[edges1[i].vertex2]] < 0)
 			return 0;
-		if(adjacent_matrix[ans[edges2[i].vertex2]][ans[edges2[i].vertex1]] < 0)
+		if(adjacent_matrix[ans[edges1[i].vertex2]][ans[edges1[i].vertex1]] < 0)
 			return 0;
 	}
 	for(i = 0; i < n; i++)
@@ -59,8 +59,6 @@ int fill_ans(int now)
 int main()
 {
 	int T, i;
-	std::vector<int> adjacent_list1[n_max];
-	std::vector<int> adjacent_list2[n_max];
 	scanf("%d", &T);
 	for(i = 1; i <= T; i++)
 	{
