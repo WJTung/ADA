@@ -143,7 +143,7 @@ int find_new(std::vector<int> *adjacent_list, int t1)
 	int i;
 	for(i = 0; i < n; i++)
 	{
-		if(!visited1[i] && is_equal(i, visit_order_2[t2])) // find same property vertex to start new DFS 
+		if(!visited1[i] && is_equal(i, visit_order_2[t1])) // find same property vertex to start new DFS 
 			if(visit1(i, adjacent_list, t1))
 				return 1;
 	}
