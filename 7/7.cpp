@@ -30,7 +30,6 @@ int check_ans(void)
 			adjacent_matrix[i][j] = 0;
 	for(i = 0; i < n; i++)
 		ans[visit_order_1[i]] = visit_order_2[i];
-	/*
 	for(i = 0; i < m; i++)
 	{
 		adjacent_matrix[edges2[i].vertex1][edges2[i].vertex2]++;
@@ -45,7 +44,6 @@ int check_ans(void)
 		if(adjacent_matrix[ans[edges1[i].vertex2]][ans[edges1[i].vertex1]] < 0)
 			return 0;
 	}
-	*/
 	for(i = 0; i < n; i++)
 		printf("%d ", ans[i] + 1);
 	putchar('\n');
